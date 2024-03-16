@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The First Project</title>
-    <!-- <link rel="stylesheet" href="./styles.css"> -->
+    <link rel="stylesheet" href="{% static 'style/styles.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/grim-reaper.png' %}" type="image/x-icon">
     <style>
         body{
             padding: 1rem 7rem;
