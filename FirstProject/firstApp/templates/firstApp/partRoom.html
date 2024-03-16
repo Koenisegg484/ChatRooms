@@ -1,9 +1,51 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<h2>This is the part room page</h2>
+<style>
+    .message-body{
+        width: 60%;
+        height:fit-content;
+        margin: auto;
+        margin-bottom: 10px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background-color: antiquewhite;
+        border: 3px rgb(225, 150, 150) solid;
+    }
+    
+    .message-body .upper-tag{
+        display: flex;
+        margin-left: auto;
+        justify-content: space-between;
+    }
+    
+    .message{
+        padding: 5px;
+        font-size: 20px;        
+        border-radius: 10px;
+        border: 0px solid white;
+        background-color: rgb(255, 255, 255);
+    }
+</style>
+<h2>This is the particular room page</h2>
     <center>
         <h1>{{ room.name }}</h1>
-        <p>This Room was created on : {{ room.created }}</p>
+        <p>This Room was created on : {{ room.created }}</p><br><br>
+        <p>{{ room.description }}</p>
     </center>
+
+    <div class="messages">
+        <h2><strong>Comments</strong></h2>
+        <hr>
+        {% for message in comments %}
+            <div class="message-body">
+                <div class="upper-tag">
+                    <p>@{{ message.user }}</p>
+                    <p>{{ message.created|timesince }}</p>
+                </div>
+                <p class="message">{{ message.body }}</p>
+            </div>
+            
+        {% endfor %}
+    </div>
 {% endblock %}

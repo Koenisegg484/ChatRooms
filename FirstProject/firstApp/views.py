@@ -21,7 +21,7 @@ def user_login_register(request):
     page = 'login'
     
     if (request.method == 'POST'):
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         pwd = request.POST.get('password')
 
         # Checks if the user exists in the database
@@ -45,6 +45,18 @@ def user_login_register(request):
 # This is for registering the user
 def register_user(request):
     form = UserCreationForm()
+
+    # Validating the form data then committing it in the database
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, "Sorry, some error occured at our side.")
     context = {'form':form}
     return render(request, 'firstApp/login_registration.html', context)
 
@@ -78,7 +90,8 @@ def room(req):
 # This is for creating pages to show details of a particular room
 def particularRooms(request, pk):
     room = Room.objects.get(id=pk)
-    context = {'room' : room, 'pk' : pk}
+    commentmessages = room.message_set.all().order_by('-created')
+    context = {'room' : room, 'pk' : pk, 'comments':commentmessages}
 
     return render(request, 'firstApp/partRoom.html', context)
 

@@ -1,18 +1,33 @@
 <nav style="display: flex; justify-content: space-between; align-items: center;">
+
+    <style>
+        .nav-ul{
+            list-style: none;
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-ul li{
+            display: inline;
+            margin-left: auto;
+            margin-right: 5px;
+        }
+    </style>
     <a href="/"><h3 style="margin: 0;">Logo</h3></a>
 
     <form action="" method="get">
         <input type="text" name="q" placeholder="Search Rooms...">
     </form>
-    <ul style="list-style: none; display: inline; margin: 0; padding: 0;">
-        <li style="display: inline; margin-left: auto;"><a href="/home/">Home</a></li>
-        <li style="display: inline; margin-left: 10px;"><a href="/room/">Rooms</a></li>
-        <li style="display: inline; margin-left: 10px;"><a href="/create-room/">Create Room</a></li>
-
+    <ul class="nav-ul">
+        <li><a href="/home/">Home</a></li>
+        <li><a href="/room/">Rooms</a></li>
+        <li><a href="/create-room/">Create Room</a></li>
         {% if request.user.is_authenticated %}
-            <li style="display: inline; margin-left: 10px;"><a href="/logout/">Log out</a></li>
+            <li>Hello {{request.user }}</li>
+            <li><a href="/logout/">Log out</a></li>
         {% else %}
-            <li style="display: inline; margin-left: 10px;"><a href="/login/">Log in</a></li>
+            <li><a href="/login/">Log in</a></li>
         {% endif  %}
     </ul>
 </nav>
