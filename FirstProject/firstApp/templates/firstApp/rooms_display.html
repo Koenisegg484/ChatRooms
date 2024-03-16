@@ -1,0 +1,26 @@
+{% if rooms%}
+{% for room in rooms %}
+    <div class="roomBox">
+        <span class="host">
+            <a href="/user-profile/{{room.host.id}}/">@{{ room.host }}</a>
+        </span>
+        <div class="inBox">
+            <!-- <h5>{{ room.id }}</h5> -->
+            <a id="roomName" href="/room/{{room.id}}/"><p>{{ room.name }}</p></a>
+            {% if request.user == room.host %}
+                <div class="edButtons">
+                    <a href="/update-room/{{room.id}}/">Edit</a><br><hr>
+                    <a href="/delete-room/{{room.id}}/">Delete</a>
+                </div>
+            {% endif %}
+        </div>
+        <small class="topic">{{ room.topic }}</small>
+    </div>
+{% endfor %}
+{% else %}
+<div class="roomBox">
+    <center>
+        <h3>!!! No search results found !!!</h3>
+    </center>
+</div>
+{% endif %}

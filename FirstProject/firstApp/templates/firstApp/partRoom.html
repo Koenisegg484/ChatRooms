@@ -39,9 +39,17 @@
     }
 
     .comment-form{
+        width: 60%;
         margin: auto;
         margin-bottom: 10px;
-        padding: 12px 20px;
+    }
+
+    .comment-form input{
+        width: 90%;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: large;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 </style>
 
@@ -60,6 +68,13 @@
         <div class="messages">
             <h2><strong>Comments</strong></h2>
             <hr>
+            {% if request.user.is_authenticated %}
+                <form class="comment-form" action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="msg" id="msg" placeholder="Write a comment here...">
+                </form>
+            {% endif %}
+            <hr>
             {% for message in comments %}
             <div class="message-body">
                 <div class="upper-tag">
@@ -67,15 +82,12 @@
                     <p>{{ message.created|timesince }}</p>
                 </div>
                 <p class="message">{{ message.body }}</p>
+                {% if message.user == request.user %}
+                    <a href="/delete-message/{{message.id}}">Remove</a>
+                {% endif %}
             </div>
             
             {% endfor %}
-            {% if request.user.is_authenticated %}
-                <form class="comment-form" action="" method="POST">
-                    {% csrf_token %}
-                    <input type="text" name="msg" id="msg" placeholder="Write a comment here...">
-                </form>
-            {% endif %}
         </div>
         
         <div class="participants-sidebar">

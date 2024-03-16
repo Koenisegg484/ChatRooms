@@ -1,0 +1,12 @@
+<h3>Browse Topics</h3><hr>
+        <a href="/room/">
+            <span class="sidebar-topic">
+                All Topics
+            </span><br><br>
+        {% for topic in topics %}
+        <a href="/room/?q={{topic.name}}">
+            <span class="sidebar-topic">
+                {{ topic.name }}
+            </span><br><br>
+        </a>
+        {% endfor %}

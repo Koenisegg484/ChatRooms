@@ -65,6 +65,14 @@ def logoutuser(request):
     logout(request)
     return redirect('home')
 
+
+def user_profile(request, pk):
+    user = User.objects.get(id=pk)
+    rooms = user.room_set.all()
+    topics = Topic.objects.all()
+    room_messages = user.message_set.all()
+    return render(request, 'firstApp/user_profile.html', {'user':user, 'rooms':rooms, 'topics':topics, 'room_messages':room_messages})
+
 # This is the home page of the website
 def home(req):
     return render(req, 'firstApp/home.html')
@@ -82,7 +90,10 @@ def room(req):
         # | Q(host__icontains=q)
     )
     room_count = Room.objects.count()
-    context =  {'rooms':rooms, 'topics':topics, 'counts':room_count}
+    room_messages = Message.objects.all().filter(
+        room__topic__name__icontains=q
+    )
+    context =  {'rooms':rooms, 'topics':topics, 'counts':room_count, 'room_messages':room_messages}
     # print(f"\n\n{room_count}\n\n")
     return render(req, 'firstApp/room.html',context)
 
@@ -90,15 +101,16 @@ def room(req):
 # This is for creating pages to show details of a particular room
 def particularRooms(request, pk):
     room = Room.objects.get(id=pk)
+    commentmessages = room.message_set.all()
     participants = room.participants.all()
-    commentmessages = room.message_set.all().order_by('-created')
-
     if request.method == "POST":
         message = Message.objects.create(
             user = request.user,
             room = room,
             body = request.POST.get('msg')
         )
+        room.participants.add(request.user)
+        participants = room.participants.all()
         return redirect('/room/'+pk)
     context = {'room' : room, 'pk' : pk, 'comments':commentmessages, 'participants' : participants}
 
@@ -163,3 +175,15 @@ def deleteRoom(request, pk):
         room.delete()
         return redirect('room')
     return render(request, 'firstApp/delete.html', {'obj':room})
+
+def remove_comment(request, pk):
+    message = Message.objects.get(id=pk)
+    if request.user != message.user:
+        return HttpResponse("You are not permitted here")
+    # messages.error("You are not allowed here")
+    if request.method == 'POST':
+        message.delete()
+        # return redirect(request.META.HTTP_REFERER)
+        return redirect('home')
+    return render(request, 'firstApp/delete.html', {'obj':message})
+    

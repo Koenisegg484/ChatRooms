@@ -10,7 +10,7 @@
 <style>
     .home-container{
         display: grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 3fr 1fr;
     }
 
     .roomBox{
@@ -24,7 +24,7 @@
         color: rgb(0, 0, 0);
         text-decoration: none;
     }
-    .roomBox .host{
+    .host{
         padding: 5px 9px;
         align-items: center;
         border: none;
@@ -71,49 +71,26 @@
         border-radius: 10px;
         background-color: rgb(147, 102, 205);
     }
+
+    .feed-box{
+        border: 2px gray solid;
+        border-radius: 10px;
+        margin: 2px 0px;
+        padding: 5px 10px;
+    }
 </style>
 
 <div class="home-container">
     <div class="sidebar">
-        <h3>Browse Topics</h3><hr>
-        <a href="/room/">
-            <span class="sidebar-topic">
-                All Topics
-            </span><br><br>
-        {% for topic in topics %}
-        <a href="/room/?q={{topic.name}}">
-            <span class="sidebar-topic">
-                {{ topic.name }}
-            </span><br><br>
-        </a>
-        {% endfor %}
+        {% include 'firstApp/topics_display.html'   %}
     </div>
 
     <div class="allRooms">
-        {% if rooms%}
-            {% for room in rooms %}
-                <div class="roomBox">
-                    <span class="host">@{{ room.host }}</span>
-                    <div class="inBox">
-                        <!-- <h5>{{ room.id }}</h5> -->
-                        <a id="roomName" href="/room/{{room.id}}/"><p>{{ room.name }}</p></a>
-                        {% if request.user == room.host %}
-                            <div class="edButtons">
-                                <a href="/update-room/{{room.id}}/">Edit</a><br><hr>
-                                <a href="/delete-room/{{room.id}}/">Delete</a>
-                            </div>
-                        {% endif %}
-                    </div>
-                    <small class="topic">{{ room.topic }}</small>
-                </div>
-            {% endfor %}
-        {% else %}
-            <div class="roomBox">
-                <center>
-                    <h3>!!! No search results found !!!</h3>
-                </center>
-            </div>
-        {% endif %}
-        </div>
+        {% include 'firstApp/rooms_display.html'   %}
+    </div>
+
+    <div class="sidebar">
+        {% include 'firstApp/activity_feed.html'   %}
+    </div>
 </div>
 {% endblock %}

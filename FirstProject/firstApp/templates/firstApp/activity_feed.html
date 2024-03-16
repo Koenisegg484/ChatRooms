@@ -1,0 +1,12 @@
+<h3>Activity Feed</h3><hr>
+            {% for msg in room_messages %}
+                <div class="feed-box">
+                    <small>
+                    <span class="host"><a href="/user-profile/{{msg.user.id}}">@{{msg.user}}</a></span>
+                    {{msg.created|timesince}} ago</small>
+                    <p>{{ msg }}</p>
+                    {% if request.user == msg.user %}
+                        <a href="/delete-message/{{msg.id}}">Remove</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
