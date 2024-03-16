@@ -26,7 +26,27 @@
         border: 0px solid white;
         background-color: rgb(255, 255, 255);
     }
+
+    .main-container{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+    .messages{
+        margin-right: 10px;
+    }
+    .participants-sidebar{
+        margin-left: 10px;
+    }
+
+    .comment-form{
+        margin: auto;
+        margin-bottom: 10px;
+        padding: 12px 20px;
+    }
 </style>
+
+
+
 <h2>This is the particular room page</h2>
     <center>
         <h1>{{ room.name }}</h1>
@@ -34,10 +54,13 @@
         <p>{{ room.description }}</p>
     </center>
 
-    <div class="messages">
-        <h2><strong>Comments</strong></h2>
-        <hr>
-        {% for message in comments %}
+    <div class="main-container">
+
+        
+        <div class="messages">
+            <h2><strong>Comments</strong></h2>
+            <hr>
+            {% for message in comments %}
             <div class="message-body">
                 <div class="upper-tag">
                     <p>@{{ message.user }}</p>
@@ -46,6 +69,21 @@
                 <p class="message">{{ message.body }}</p>
             </div>
             
-        {% endfor %}
+            {% endfor %}
+            {% if request.user.is_authenticated %}
+                <form class="comment-form" action="" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="msg" id="msg" placeholder="Write a comment here...">
+                </form>
+            {% endif %}
+        </div>
+        
+        <div class="participants-sidebar">
+            <h2><strong>Participants</strong></h2>
+            <hr>
+            {% for usr in participants %}
+            <p>{{ usr }}</p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

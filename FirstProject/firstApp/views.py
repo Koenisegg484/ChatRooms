@@ -1,6 +1,6 @@
 from .forms import RoomForm
 from django.db.models import Q
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -90,8 +90,17 @@ def room(req):
 # This is for creating pages to show details of a particular room
 def particularRooms(request, pk):
     room = Room.objects.get(id=pk)
+    participants = room.participants.all()
     commentmessages = room.message_set.all().order_by('-created')
-    context = {'room' : room, 'pk' : pk, 'comments':commentmessages}
+
+    if request.method == "POST":
+        message = Message.objects.create(
+            user = request.user,
+            room = room,
+            body = request.POST.get('msg')
+        )
+        return redirect('/room/'+pk)
+    context = {'room' : room, 'pk' : pk, 'comments':commentmessages, 'participants' : participants}
 
     return render(request, 'firstApp/partRoom.html', context)
 
